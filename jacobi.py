@@ -59,11 +59,13 @@ def jacobi(A: csc_array, tol=1.0e-9):  # Jacobi method
             P[i, j_max] = P[i, j_max] + s * (temp - tau * P[i, j_max])
 
     n = A.shape[0]
+    count_iterations = 0
     maxRot = 5 * (n ** 2)  # Set limit on number of rotations
     P = csc_array(np.identity(n, dtype=np.float_))  # Initialize transformation matrix
     for i in range(maxRot):  # Jacobi rotation loop
+        count_iterations += 1
         aMax, i_max, j_max = maxElem(A)
         if aMax < tol:
-            return np.diagonal(A.toarray()), P.toarray()
+            return np.diagonal(A.toarray()), P.toarray(), count_iterations
         rotate(A, P, i_max, j_max)
     print('Jacobi method did not converge')
